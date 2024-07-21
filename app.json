@@ -1,4 +1,12 @@
 {
   "name": "LocationApp",
-  "displayName": "LocationApp"
+  "displayName": "LocationApp",
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "1c2f1032-0195-4da0-8850-6b3dda0fa72b"
+      }
+    },
+    "owner": "gagannn32111"
+  }
 }
