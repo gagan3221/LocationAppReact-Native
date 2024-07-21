@@ -64,7 +64,7 @@ export function MapPage (){
 
     }
     function _getCurrentLocation(){
-        GetLocation.getCurrentPosition({
+        const LOC = GetLocation.getCurrentPosition({
             enableHighAccuracy: true,
             timeout: 60000,
         })
@@ -80,8 +80,8 @@ export function MapPage (){
         if(!searchText.trim().length) return;
         const googleApisUrl = "https://maps.googleapis.com/maps/api/place/textsearch/json";
         const input = searchText.trim();
-        const location = `${INITIAL_LAT},${INITIAL_LNG}&radius=2000`;
-        const url = `${googleApisUrl}?query=${input}&location=${location}&key=AIzaSyBeUtuhUFqrAQV_2RtJObtNMhKahsQ6t-k`; 
+        const loc = `${_getCurrentLocation}&radius=1`;
+        const url = `${googleApisUrl}?query=${input}&location=${loc}&key=AIzaSyBeUtuhUFqrAQV_2RtJObtNMhKahsQ6t-k`; 
         try{
             const resp = await fetch(url);
             const json = await resp.json();
