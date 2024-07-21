@@ -7,6 +7,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import { useNavigation } from "@react-navigation/native";
 import { isEnabled } from "react-native/Libraries/Performance/Systrace";
 import GetLocation from "react-native-get-location";
+import { ListView } from "./list_view";
 
 
 const {width , height} = Dimensions.get("window");
@@ -80,7 +81,7 @@ export function MapPage (){
         if(!searchText.trim().length) return;
         const googleApisUrl = "https://maps.googleapis.com/maps/api/place/textsearch/json";
         const input = searchText.trim();
-        const loc = `${_getCurrentLocation}&radius=1`;
+        const loc = `${_getCurrentLocation}&radius=100`;
         const url = `${googleApisUrl}?query=${input}&location=${loc}&key=AIzaSyBeUtuhUFqrAQV_2RtJObtNMhKahsQ6t-k`; 
         try{
             const resp = await fetch(url);
@@ -163,6 +164,9 @@ export function MapPage (){
         style ={styles.switch}
       />
             </View>
+                <TouchableOpacity onPress={()=>navigation.navigate("ListView")} style = {styles.doneButton}>
+                    <Text style = {styles.buttonLabel}>Done</Text>
+                </TouchableOpacity>
         </View>
     );
 }
@@ -216,6 +220,17 @@ const styles = StyleSheet.create({
     switch : {
         transform: [{ scaleX: 1.5 }, { scaleY: 2 }]
 
+    },
+    doneButton:{
+        alignItems : "center",
+        justifyContent : "center",
+        padding : 8,
+        backgroundColor : "#26f",
+        borderRadius :8 ,
+        position : "absolute",
+        bottom : 0 ,
+        alignSelf : "center",
+        width : "100%"
     }
 
     
