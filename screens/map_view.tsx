@@ -1,11 +1,12 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import MapView, { LatLng, Marker } from "react-native-maps";
-import { Text , View , StyleSheet, Button, ScrollView, TextInput, TouchableOpacity, Dimensions, Keyboard , Switch, SwitchComponent } from "react-native";
+import { Text , View , StyleSheet, Button, ScrollView, TextInput, TouchableOpacity, Dimensions, Keyboard , Switch, SwitchComponent, Platform, PermissionsAndroid } from "react-native";
 import GeoLocation from "react-native-geolocation-service";
 import { PROVIDER_GOOGLE } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { useNavigation } from "@react-navigation/native";
 import { isEnabled } from "react-native/Libraries/Performance/Systrace";
+import GetLocation from "react-native-get-location";
 
 
 const {width , height} = Dimensions.get("window");
@@ -25,12 +26,56 @@ const INITIAL_POSITION ={
 
 
 export function MapPage (){
+    const [permissionGranter, setPermissionGranter] = useState(false);
     const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     const navigation = useNavigation();
     const [searchText ,setSearchText] = React.useState('');
     const [results , setResults] = useState<any[]>([]);
     const map = useRef<MapView | null>(null);
+    useEffect(() => {
+        _getLocationPermission();
+    } , [])
+
+    async function _getLocationPermission(){
+        if(Platform.OS === 'android'){
+            try {
+                const granted = await PermissionsAndroid.request(
+                  PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                  {
+                    title: 'Location Permission',
+                    message:
+                      'Please allow Location Permission to continue...',
+                    buttonNeutral: 'Ask Me Later',
+                    buttonNegative: 'Cancel',
+                    buttonPositive: 'OK',
+                  },
+                );
+                if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                    setPermissionGranter(true);
+                  _getCurrentLocation();
+                } else {
+                  console.log('Camera permission denied');
+                }
+              } catch (err) {
+                console.warn(err);
+              }
+        }
+
+    }
+    function _getCurrentLocation(){
+        GetLocation.getCurrentPosition({
+            enableHighAccuracy: true,
+            timeout: 60000,
+        })
+        .then(location => {
+            console.log("My Current Location =>",location);
+        })
+        .catch(error => {
+            const { code, message } = error;
+            console.warn(code, message);
+        })
+    }
     const searchPlaces = async() =>{
         if(!searchText.trim().length) return;
         const googleApisUrl = "https://maps.googleapis.com/maps/api/place/textsearch/json";
@@ -70,22 +115,17 @@ export function MapPage (){
             console.error(e);
         }
         };
+        if(!permissionGranter)
+            return(
+        <View>
+            <Text>
+                Please allow location permission to continue...
+            </Text>
+        </View>
+        );
     return(
         <View style = {{flex :1 , flexDirection : "column-reverse"}}> 
-            <View style = {styles.searchBox}>
-                <Text style={{fontSize:16 , color : 'black' , fontWeight : '500'}}>Search Place</Text>
-                <TextInput style={styles.searchBoxField}
-                onChangeText={setSearchText}
-                autoCapitalize="sentences"
-                value={searchText}
-                placeholder="Search for locations"
-                />
-                <TouchableOpacity style={styles.buttonContainer} onPress={searchPlaces}>
-                    <Text style ={styles.buttonLabel}>Search</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.mapContainer}>
-            <MapView style = {styles.map}  provider={PROVIDER_GOOGLE}  ref={map}
+        <MapView style = {styles.map}  provider={PROVIDER_GOOGLE}  ref={map}
             initialRegion={INITIAL_POSITION}>
                 {results.length ? results.map((item , i)=>{
                     const coord : LatLng ={
@@ -100,7 +140,19 @@ export function MapPage (){
                 }):null}
                 
             </MapView>
+            <View style = {styles.searchBox}>
+                <Text style={{fontSize:16 , color : 'black' , fontWeight : '500'}}>Search Place</Text>
+                <TextInput style={styles.searchBoxField}
+                onChangeText={setSearchText}
+                autoCapitalize="sentences"
+                value={searchText}
+                placeholder="Search for locations"
+                />
+                <TouchableOpacity style={styles.buttonContainer} onPress={searchPlaces}>
+                    <Text style ={styles.buttonLabel}>Search</Text>
+                </TouchableOpacity>
             </View>
+            
             <View style = {styles.switchContainer}>
             <Switch
         trackColor={{false: '#767577', true: '#81b0ff'}}
@@ -159,14 +211,6 @@ const styles = StyleSheet.create({
     buttonLabel:{
         color : "white",
         fontSize : 18
-
-    },
-    mapContainer : {
-    height:650 ,
-     width :400 ,
-     alignSelf : "center" ,
-      bottom : 20 , 
-      position : "absolute"
 
     },
     switch : {
