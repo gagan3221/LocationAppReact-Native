@@ -153,18 +153,7 @@ export function MapPage (){
                     <Text style ={styles.buttonLabel}>Search</Text>
                 </TouchableOpacity>
             </View>
-            
-            <View style = {styles.switchContainer}>
-            <Switch
-        trackColor={{false: '#767577', true: '#81b0ff'}}
-        thumbColor={ isEnabled ? '#f5dd4b' : '#f4f3f4'}
-        ios_backgroundColor="#3e3e3e"
-        onValueChange={toggleSwitch}
-        value={isEnabled}
-        style ={styles.switch}
-      />
-            </View>
-                <TouchableOpacity onPress={()=>navigation.navigate("ListView")} style = {styles.doneButton}>
+                <TouchableOpacity onPress={()=>navigation.navigate('ListView',{results})} style = {styles.doneButton}>
                     <Text style = {styles.buttonLabel}>Done</Text>
                 </TouchableOpacity>
         </View>
