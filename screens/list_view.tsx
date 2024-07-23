@@ -1,6 +1,7 @@
 import React from "react";
 import { Text , View , StyleSheet , TouchableOpacity  , FlatList} from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { styles } from "./styles";
 
 
 export function ListView() {
@@ -27,51 +28,10 @@ export function ListView() {
           <Text style={styles.header}>Search Results</Text>
         }
       />
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Text style={styles.backButtonText}>Back</Text>
-      </TouchableOpacity>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  itemContainer: {
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  itemTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  itemDescription: {
-    fontSize: 16,
-    color: '#555',
-  },
-  backButton: {
-    padding: 16,
-    backgroundColor: '#26f',
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  backButtonText: {
-    color: 'white',
-    fontSize: 18,
-  },
-});
 
 
 

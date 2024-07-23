@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import { isEnabled } from "react-native/Libraries/Performance/Systrace";
 import GetLocation from "react-native-get-location";
 import { ListView } from "./list_view";
+import { styles } from "./styles";
 
 
 const {width , height} = Dimensions.get("window");
@@ -142,7 +143,7 @@ export function MapPage (){
                 
             </MapView>
             <View style = {styles.searchBox}>
-                <Text style={{fontSize:16 , color : 'black' , fontWeight : '500'}}>Search Place</Text>
+                <Text style={styles.searchPlaceText}>Search Place</Text>
                 <TextInput style={styles.searchBoxField}
                 onChangeText={setSearchText}
                 autoCapitalize="sentences"
@@ -154,73 +155,8 @@ export function MapPage (){
                 </TouchableOpacity>
             </View>
                 <TouchableOpacity onPress={()=>navigation.navigate('ListView',{results})} style = {styles.doneButton}>
-                    <Text style = {styles.buttonLabel}>Done</Text>
+                    <Text style = {styles.buttonLabel}>Show list view</Text>
                 </TouchableOpacity>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    switchContainer:{
-        position : "absolute" ,
-         top : 160, 
-         alignSelf : "flex-end" ,
-          end : 10
-    },
-
-    map: {
-      width : "100%",
-      height : "100%"
-    },
-    searchBox :{
-        position : "absolute",
-        width:"90%",
-        top:0,
-        borderRadius : 8,
-        borderWidth :1 ,
-        borderColor : '#aaa',
-        backgroundColor : 'white',
-        padding : 8,
-        alignSelf : 'center',
-        marginTop : 15
-    },
-    searchBoxField:{
-        borderColor : "#777",
-        borderWidth : 1,
-        borderRadius : 4 ,
-        paddingHorizontal :8,
-        paddingVertical : 4,
-        fontSize : 18,
-        marginBottom : 8
-
-    },
-    buttonContainer:{
-        alignItems : "center",
-        justifyContent : "center",
-        padding : 8,
-        backgroundColor : "#26f",
-        borderRadius :8
-    },
-    buttonLabel:{
-        color : "white",
-        fontSize : 18
-
-    },
-    switch : {
-        transform: [{ scaleX: 1.5 }, { scaleY: 2 }]
-
-    },
-    doneButton:{
-        alignItems : "center",
-        justifyContent : "center",
-        padding : 8,
-        backgroundColor : "#26f",
-        borderRadius :8 ,
-        position : "absolute",
-        bottom : 0 ,
-        alignSelf : "center",
-        width : "100%"
-    }
-
-    
-});
