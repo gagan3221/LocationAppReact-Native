@@ -57,7 +57,7 @@ export function MapPage (){
                     setPermissionGranter(true);
                   _getCurrentLocation();
                 } else {
-                  console.log('Camera permission denied');
+                  console.log('Location permission denied');
                 }
               } catch (err) {
                 console.warn(err);
